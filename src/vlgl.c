@@ -27,14 +27,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
+#define GLFW_INCLUDE_GLCOREARB
 #define GL_GLEXT_PROTOTYPES
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-// #include <GL/gl.h>
-// #include <GL/glu.h>
+#if defined(__APPLE__)
+#include <OpenGL/gl3.h>
+#include <OpenGL/gl3ext.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
 #include "3dm/3dm.h"
 #include "3dm/poly.h"
 #include "valo/vlgl.h"

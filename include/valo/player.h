@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
+#define GLFW_INCLUDE_GLCOREARB
 #ifndef _VL_PLAYER_H
 #define _VL_PLAYER_H
 #include <pthread.h>

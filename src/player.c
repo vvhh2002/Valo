@@ -41,8 +41,8 @@
 #include <libavutil/time.h>
 #include <libswscale/swscale.h>
 #if defined(__APPLE__)
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
+#include <OpenGL/gl3.h>
+#include <OpenGL/gl3ext.h>
 #else
 #include <GL/gl.h>
 #include <GL/glu.h>
