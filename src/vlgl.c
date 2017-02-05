@@ -33,8 +33,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+// #include <GL/gl.h>
+// #include <GL/glu.h>
 #include "3dm/3dm.h"
 #include "3dm/poly.h"
 #include "valo/vlgl.h"
@@ -294,7 +294,8 @@ void VLGL_reset(VLGL *gl)
 void VLGL_version(void)
 {
   int vs[2];
-  glGetIntegerv(GL_MAJOR_VERSION, &vs[0]);
-  glGetIntegerv(GL_MINOR_VERSION, &vs[1]);
-  printf("OpenGL version: %s, %d, %d\n", glGetString(GL_VERSION), vs[0], vs[1]);
+  // glGetIntegerv(GL_MAJOR_VERSION, &vs[0]);
+  // glGetIntegerv(GL_MINOR_VERSION, &vs[1]);
+  printf("%s %s\n", glGetString(GL_RENDERER), glGetString(GL_VERSION));
+  // printf("OpenGL version: %s, %d, %d\n", glGetString(GL_VERSION), vs[0], vs[1]);
 }

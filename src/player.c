@@ -40,6 +40,13 @@
 #include <libavutil/avutil.h>
 #include <libavutil/time.h>
 #include <libswscale/swscale.h>
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
 #include "valo/vlgl.h"
 #include "valo/player.h"
 
@@ -88,6 +95,7 @@ static void *VLPlayer_thread(void *arg)
   AVFormatContext *ic = NULL;
   AVCodecContext *vcc = NULL;
   AVStream *vs = NULL;
+  AVCodecParameters *vcp=NULL;
   AVCodec *vc = NULL;
   AVFrame *frame = NULL;
   AVFrame *_frame = NULL;
@@ -108,17 +116,16 @@ static void *VLPlayer_thread(void *arg)
   avformat_find_stream_info(ic, NULL);
 
   for (unsigned i = 0; i < ic->nb_streams; i++) {
-    if (ic->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO) {
+    if (ic->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
       vs = ic->streams[i];
       vi = i;
       break;
     }
   }
-
   vcc = vs->codec;
   vc = avcodec_find_decoder(vcc->codec_id);
   avcodec_open2(vcc, vc, NULL);
-  frame = avcodec_alloc_frame();
+   frame=av_frame_alloc();
 
   timer->duration = ic->duration;
 
@@ -143,15 +150,15 @@ static void *VLPlayer_thread(void *arg)
           if (img->width != frame->width || img->height != frame->height) {
             if (_frame) av_free(_frame);
             if (img->data) free(img->data);
-            _frame = avcodec_alloc_frame();
-            img->data = av_malloc(avpicture_get_size(PIX_FMT_YUV420P, frame->width, frame->height) * sizeof(uint8_t));
-            avpicture_fill((AVPicture *)_frame, img->data, PIX_FMT_YUV420P, frame->width, frame->height);
+			_frame=av_frame_alloc();
+            img->data = av_malloc(avpicture_get_size(AV_PIX_FMT_YUV420P, frame->width, frame->height) * sizeof(uint8_t));
+            avpicture_fill((AVPicture *)_frame, img->data, AV_PIX_FMT_YUV420P, frame->width, frame->height);
             img->y = _frame->data[0];
             img->u = _frame->data[1];
             img->v = _frame->data[2];
             img->width = frame->width;
             img->height = frame->height;
-            sws = sws_getCachedContext(sws, frame->width, frame->height, vcc->pix_fmt, frame->width, frame->height, PIX_FMT_YUV420P, SWS_BILINEAR, NULL, NULL, NULL);
+            sws = sws_getCachedContext(sws, frame->width, frame->height, vcc->pix_fmt, frame->width, frame->height, AV_PIX_FMT_YUV420P, SWS_BILINEAR, NULL, NULL, NULL);
           }
           sws_scale(sws, (const uint8_t * const*)frame->data, frame->linesize, 0, frame->height, _frame->data, _frame->linesize);
 
